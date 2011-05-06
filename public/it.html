@@ -6,12 +6,12 @@ function $(id) {
 }
 </script>
 
-<body style="background-image:url('/background.png');">
+<body style="background-image:url('/background.gif');">
 	<div id="cloudmap" style="position: absolute; left:0; top:0; height:2427; width:2131;">
-		<div id="antireception" style="z-index:1; position:absolute; background-image:url('/antireception.png'); width:347px; height:395px; margin-left:537px; margin-top:311px;">&nbsp;</div>
-		<div id="kitchen_wall" style="z-index:2; position:absolute; background-image:url('/kitchen_wall.png'); width:258px; height:456px; margin-left:395px; margin-top:298px;">&nbsp;</div>
-		<div id="pillars" style="z-index:3; position:absolute; background-image:url('/pillars.png'); width:1131px; height:1512px; margin-left:466px; margin-top:247px;">&nbsp;</div>
-		<div id="walls_and_tables" style="z-index:4; position:absolute; background-image:url('/walls_and_tables.png'); width:1661px; height:1520px; margin-left:221px; margin-top:653px;">&nbsp;</div>
+		<div id="antireception" style="z-index:1; position:absolute; background-image:url('/antireception.gif'); width:347px; height:395px; margin-left:537px; margin-top:311px;">&nbsp;</div>
+		<div id="kitchen_wall" style="z-index:2; position:absolute; background-image:url('/kitchen_wall.gif'); width:258px; height:456px; margin-left:395px; margin-top:298px;">&nbsp;</div>
+		<div id="pillars" style="z-index:3; position:absolute; background-image:url('/pillars.gif'); width:1131px; height:1512px; margin-left:466px; margin-top:247px;">&nbsp;</div>
+		<div id="walls_and_tables" style="z-index:4; position:absolute; background-image:url('/walls_and_tables.gif'); width:1661px; height:1520px; margin-left:221px; margin-top:653px;">&nbsp;</div>
 	</div>
 </body>
 
@@ -55,7 +55,7 @@ window.addEventListener('load', function()
 
 
 	function create_new_player(id) {
-		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('/last-guardian-sprites.png'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
+		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('/last-guardian-sprites.gif'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
 		$('cloudmap').innerHTML += playerSpriteHTML;
 		return { sprite: $('guy' + id), x: 0, y: 0 };
 	}
