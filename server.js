@@ -13,9 +13,6 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.bodyParser());
     app.use(app.router);
-});
-
-app.configure('development', function(){
     app.use(express.static(__dirname + '/public'));
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -28,7 +25,7 @@ socket.on('connection', function(client) {
   client.on('message', function(message){ 
     // Update the locations of all known people on the map
     players[client.sessionId] = message;
-	sys.puts(util.inspect(message));
+	//sys.puts(util.inspect(message));
   });
   client.on('disconnect', function(){ sys.puts("client disconnected"); });
 });

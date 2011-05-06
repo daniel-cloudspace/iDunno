@@ -6,8 +6,14 @@ function $(id) {
 }
 </script>
 
-<div id="cloudmap" style="position: absolute; left:0; top:0;">
-</div>
+<body style="background-image:url('/background.png');">
+	<div id="cloudmap" style="position: absolute; left:0; top:0; height:2427; width:2131;">
+		<div id="antireception" style="z-index:1; position:absolute; background-image:url('/antireception.png'); width:347px; height:395px; margin-left:537px; margin-top:311px;">&nbsp;</div>
+		<div id="kitchen_wall" style="z-index:2; position:absolute; background-image:url('/kitchen_wall.png'); width:258px; height:456px; margin-left:395px; margin-top:298px;">&nbsp;</div>
+		<div id="pillars" style="z-index:3; position:absolute; background-image:url('/pillars.png'); width:1131px; height:1512px; margin-left:466px; margin-top:247px;">&nbsp;</div>
+		<div id="walls_and_tables" style="z-index:4; position:absolute; background-image:url('/walls_and_tables.png'); width:1661px; height:1520px; margin-left:221px; margin-top:653px;">&nbsp;</div>
+	</div>
+</body>
 
 
 
@@ -17,34 +23,48 @@ function $(id) {
 
 window.addEventListener('load', function()
 {
+	// prev variables
+	var prev_player = {x:0, y:0};
+
+	// Window environment data
+	var window_width = window.innerWidth;
+	var window_height = window.innerHeight;
+	// Events to update that data
+	document.addEventListener('resize', function(e) {
+		window_width = window.innerWidth;
+		window_height = window.innerHeight;
+	}, false);
 
 
-	// hold keys in global variable
+	// Key stroke bindings
 	var keys = {};
 	document.addEventListener('keydown', function(e) {
-	    keys[e.keyCode] = true;
+		keys[e.keyCode] = true;
+		e.preventDefault(); // prevents scrolling
 	}, false);
 	document.addEventListener('keyup', function(e) {
-	    keys[e.keyCode] = false;
+		keys[e.keyCode] = false;
+		e.preventDefault(); // prevents scrolling
 	}, false);
-	// should also do keyPress I guess D;
+	document.addEventListener('keypress', function(e) {
+		e.preventDefault(); // prevents scrolling
+	}, false);
 
 
 
 
 
 	function create_new_player(id) {
-		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('http://blogoscoped.com/files/last-guardian-sprites.png'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
+		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('/last-guardian-sprites.png'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
 		$('cloudmap').innerHTML += playerSpriteHTML;
 		return { sprite: $('guy' + id), x: 0, y: 0 };
 	}
 
 
 	var players = {};
-	var player = create_new_player(1);
-	players[1] = player;
+	var player = {x:680, y:360};
  
-	var socket = new io.Socket(null, {port: 8080, rememberTransport: false});
+	var socket = new io.Socket(null, {port: 80, rememberTransport: false});
 	socket.connect();
 	socket.on('connect', function(){ console.log('connected'); })
 	socket.on('message', function(message) {
@@ -58,21 +78,38 @@ window.addEventListener('load', function()
 
 	socket.on('disconnect', function(){ console.log('disconnected'); })
 
+
+
+
+	// Update the Server with your coordinates
 	window.setInterval(function() {
 		socket.send({x: player.x, y: player.y});
 	}, 50);
 	
+	// Game Loop
 	window.setInterval(function() {
+		//prev_player.x = player.x;
+		//prev_player.y = player.y;
+
+		// process input
 		if (keys[DOM_VK.LEFT]) { player.x -= 5; }
 		if (keys[DOM_VK.RIGHT]) { player.x += 5; }
 		if (keys[DOM_VK.UP]) { player.y -= 5; }
 		if (keys[DOM_VK.DOWN]) { player.y += 5; }
 		
+		// draw
 		for (i in players) {
 			players[i].sprite.style.marginLeft = players[i].x + 'px';
 			players[i].sprite.style.marginTop = players[i].y + 'px';
 		}
-	}, 5);
+
+		if ( player.y - document.body.scrollTop > window_height - 100 ) {
+			document.body.scrollTop += window_height - 200;
+		}
+		if ( player.x - document.body.scrollLeft > window_width - 100 ) {
+			document.body.scrollleft += window_width - 200;
+		}
+	}, 20);
 
 }, false);
 

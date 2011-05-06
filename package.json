@@ -1,0 +1,18 @@
+{
+  "author": "Daniel Lewis and JohnBentCope <daniel@cloudspace.com>",
+  "name": "iDunno",
+  "description": "The Cloudspace Game",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/daniel-cloudspace/iDunno.git"
+  },
+  "engines": {
+    "node": "~v0.4.7"
+  },
+  "dependencies": {
+    "express": "*",
+    "socket.io": "*"
+  },
+  "devDependencies": {}
+}
