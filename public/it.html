@@ -6,8 +6,10 @@ function $(id) {
 }
 </script>
 
-<div id="cloudmap" style="position: absolute; left:0; top:0;">
-</div>
+<body style="background-image:url('/background.png');">
+	<div id="cloudmap" style="position: absolute; left:0; top:0; height:2427; width:2131;">
+	</div>
+</body>
 
 
 
@@ -18,16 +20,29 @@ function $(id) {
 window.addEventListener('load', function()
 {
 
+	// Window environment data
+	var window_width = window.innerWidth;
+	var window_height = window.innerHeight;
+	// Events to update that data
+	document.addEventListener('resize', function(e) {
+		window_width = window.innerWidth;
+		window_height = window.innerHeight;
+	}, false);
 
-	// hold keys in global variable
+
+	// Key stroke bindings
 	var keys = {};
 	document.addEventListener('keydown', function(e) {
-	    keys[e.keyCode] = true;
+		keys[e.keyCode] = true;
+		e.preventDefault(); // prevents scrolling
 	}, false);
 	document.addEventListener('keyup', function(e) {
-	    keys[e.keyCode] = false;
+		keys[e.keyCode] = false;
+		e.preventDefault(); // prevents scrolling
 	}, false);
-	// should also do keyPress I guess D;
+	document.addEventListener('keypress', function(e) {
+		e.preventDefault(); // prevents scrolling
+	}, false);
 
 
 
@@ -41,8 +56,7 @@ window.addEventListener('load', function()
 
 
 	var players = {};
-	var player = create_new_player(1);
-	players[1] = player;
+	var player = {x:0, y:0};
  
 	var socket = new io.Socket(null, {port: 8080, rememberTransport: false});
 	socket.connect();
@@ -58,21 +72,36 @@ window.addEventListener('load', function()
 
 	socket.on('disconnect', function(){ console.log('disconnected'); })
 
+
+
+
+	// Update the Server with your coordinates
 	window.setInterval(function() {
 		socket.send({x: player.x, y: player.y});
 	}, 50);
 	
+	// Game Loop
 	window.setInterval(function() {
+		// process input
 		if (keys[DOM_VK.LEFT]) { player.x -= 5; }
 		if (keys[DOM_VK.RIGHT]) { player.x += 5; }
 		if (keys[DOM_VK.UP]) { player.y -= 5; }
 		if (keys[DOM_VK.DOWN]) { player.y += 5; }
 		
+		// draw
 		for (i in players) {
 			players[i].sprite.style.marginLeft = players[i].x + 'px';
 			players[i].sprite.style.marginTop = players[i].y + 'px';
 		}
-	}, 5);
+
+		// make player the center of the screen
+		if ( player.y > window_height / 2.0 ) {
+			document.body.scrollTop = player.y - window_height / 2.0;
+		}
+		if ( player.x > window_width / 2.0 ) {
+			document.body.scrollLeft = player.x - window_width / 2.0;
+		}
+	}, 20);
 
 }, false);
 
