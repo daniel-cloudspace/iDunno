@@ -1,0 +1,81 @@
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="keys.js"></script>
+<script type="text/javascript">
+function $(id) {
+    return document.getElementById(id);
+}
+</script>
+
+<div id="cloudmap" style="position: absolute; left:0; top:0;">
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+window.addEventListener('load', function()
+{
+
+
+	// hold keys in global variable
+	var keys = {};
+	document.addEventListener('keydown', function(e) {
+	    keys[e.keyCode] = true;
+	}, false);
+	document.addEventListener('keyup', function(e) {
+	    keys[e.keyCode] = false;
+	}, false);
+	// should also do keyPress I guess D;
+
+
+
+
+
+	function create_new_player(id) {
+		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('http://blogoscoped.com/files/last-guardian-sprites.png'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
+		$('cloudmap').innerHTML += playerSpriteHTML;
+		return { sprite: $('guy' + id), x: 0, y: 0 };
+	}
+
+
+	var players = {};
+	var player = create_new_player(1);
+	players[1] = player;
+ 
+	var socket = new io.Socket(null, {port: 8080, rememberTransport: false});
+	socket.connect();
+	socket.on('connect', function(){ console.log('connected'); })
+	socket.on('message', function(message) {
+		for (var i in message) {
+			if (typeof players[i] == "undefined") { players[i] = create_new_player(i); }
+
+			players[i].x = message[i].x;
+			players[i].y = message[i].y;
+		}
+	});
+
+	socket.on('disconnect', function(){ console.log('disconnected'); })
+
+	window.setInterval(function() {
+		socket.send({x: player.x, y: player.y});
+	}, 50);
+	
+	window.setInterval(function() {
+		if (keys[DOM_VK.LEFT]) { player.x -= 5; }
+		if (keys[DOM_VK.RIGHT]) { player.x += 5; }
+		if (keys[DOM_VK.UP]) { player.y -= 5; }
+		if (keys[DOM_VK.DOWN]) { player.y += 5; }
+		
+		for (i in players) {
+			players[i].sprite.style.marginLeft = players[i].x + 'px';
+			players[i].sprite.style.marginTop = players[i].y + 'px';
+		}
+	}, 5);
+
+}, false);
+
+</script>
+
+
