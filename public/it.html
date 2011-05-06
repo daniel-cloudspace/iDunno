@@ -11,7 +11,7 @@ function $(id) {
 		<div id="antireception" style="z-index:1; position:absolute; background-image:url('/antireception.png'); width:347px; height:395px; margin-left:537px; margin-top:311px;">&nbsp;</div>
 		<div id="kitchen_wall" style="z-index:2; position:absolute; background-image:url('/kitchen_wall.png'); width:258px; height:456px; margin-left:395px; margin-top:298px;">&nbsp;</div>
 		<div id="pillars" style="z-index:3; position:absolute; background-image:url('/pillars.png'); width:1131px; height:1512px; margin-left:466px; margin-top:247px;">&nbsp;</div>
-		<div id="walls_and_tables" style="z-index:4; position:absolute; background-image:url('/walls_and_tables.png'); width:1661px; height:1520px; margin-left:265px; margin-top:691px;">&nbsp;</div>
+		<div id="walls_and_tables" style="z-index:4; position:absolute; background-image:url('/walls_and_tables.png'); width:1661px; height:1520px; margin-left:221px; margin-top:653px;">&nbsp;</div>
 	</div>
 </body>
 
@@ -103,16 +103,13 @@ window.addEventListener('load', function()
 			players[i].sprite.style.marginTop = players[i].y + 'px';
 		}
 
-		// make player the center of the screen
-		//if ( prev_player.x != player.x || prev_player.y != player.y ) {
-		//	if ( player.y > window_height / 2.0 ) {
-				document.body.scrollTop = player.y - window_height / 2.0;
-		//	}
-		//	if ( player.x > window_width / 2.0 ) {
-				document.body.scrollLeft = player.x - window_width / 2.0;
-		//	}
-		//}
-	}, 50);
+		if ( player.y - document.body.scrollTop > window_height - 100 ) {
+			document.body.scrollTop += window_height - 200;
+		}
+		if ( player.x - document.body.scrollLeft > window_width - 100 ) {
+			document.body.scrollleft += window_width - 200;
+		}
+	}, 20);
 
 }, false);
 
