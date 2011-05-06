@@ -8,6 +8,10 @@ function $(id) {
 
 <body style="background-image:url('/background.png');">
 	<div id="cloudmap" style="position: absolute; left:0; top:0; height:2427; width:2131;">
+		<div id="antireception" style="z-index:1; position:absolute; background-image:url('/antireception.png'); width:347px; height:395px; margin-left:537px; margin-top:311px;">&nbsp;</div>
+		<div id="kitchen_wall" style="z-index:2; position:absolute; background-image:url('/kitchen_wall.png'); width:258px; height:456px; margin-left:395px; margin-top:298px;">&nbsp;</div>
+		<div id="pillars" style="z-index:3; position:absolute; background-image:url('/pillars.png'); width:1131px; height:1512px; margin-left:466px; margin-top:247px;">&nbsp;</div>
+		<div id="walls_and_tables" style="z-index:4; position:absolute; background-image:url('/walls_and_tables.png'); width:1661px; height:1520px; margin-left:265px; margin-top:691px;">&nbsp;</div>
 	</div>
 </body>
 
@@ -19,6 +23,8 @@ function $(id) {
 
 window.addEventListener('load', function()
 {
+	// prev variables
+	var prev_player = {x:0, y:0};
 
 	// Window environment data
 	var window_width = window.innerWidth;
@@ -49,14 +55,14 @@ window.addEventListener('load', function()
 
 
 	function create_new_player(id) {
-		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('http://blogoscoped.com/files/last-guardian-sprites.png'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
+		var playerSpriteHTML = "<div id='guy" + id + "' style=\"position: absolute; background-image:url('/last-guardian-sprites.png'); background-position: 507px 68px; width:70px; height:70px;\">&nbsp;</div>";
 		$('cloudmap').innerHTML += playerSpriteHTML;
 		return { sprite: $('guy' + id), x: 0, y: 0 };
 	}
 
 
 	var players = {};
-	var player = {x:0, y:0};
+	var player = {x:680, y:360};
  
 	var socket = new io.Socket(null, {port: 8080, rememberTransport: false});
 	socket.connect();
@@ -82,6 +88,9 @@ window.addEventListener('load', function()
 	
 	// Game Loop
 	window.setInterval(function() {
+		//prev_player.x = player.x;
+		//prev_player.y = player.y;
+
 		// process input
 		if (keys[DOM_VK.LEFT]) { player.x -= 5; }
 		if (keys[DOM_VK.RIGHT]) { player.x += 5; }
@@ -95,13 +104,15 @@ window.addEventListener('load', function()
 		}
 
 		// make player the center of the screen
-		if ( player.y > window_height / 2.0 ) {
-			document.body.scrollTop = player.y - window_height / 2.0;
-		}
-		if ( player.x > window_width / 2.0 ) {
-			document.body.scrollLeft = player.x - window_width / 2.0;
-		}
-	}, 20);
+		//if ( prev_player.x != player.x || prev_player.y != player.y ) {
+		//	if ( player.y > window_height / 2.0 ) {
+				document.body.scrollTop = player.y - window_height / 2.0;
+		//	}
+		//	if ( player.x > window_width / 2.0 ) {
+				document.body.scrollLeft = player.x - window_width / 2.0;
+		//	}
+		//}
+	}, 50);
 
 }, false);
 
